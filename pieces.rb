@@ -28,7 +28,6 @@ class Piece
   end
 
   def empty?(pos)
-    p pos
     @board[pos].nil?
   end
 
@@ -140,9 +139,6 @@ class King < SteppingPiece
     @deltas = DELTAS
   end
 
-  def moves(pos)
-
-  end
 end
 
 class Knight < SteppingPiece
@@ -160,9 +156,6 @@ class Knight < SteppingPiece
               [-2, 1],
               [-2, -1]
               ]
-  end
-
-  def moves(pos)
   end
 end
 

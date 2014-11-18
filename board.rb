@@ -1,4 +1,6 @@
 require "./pieces.rb"
+require "./chess_errors.rb"
+
 
 class Board
   SIZE = 8
@@ -10,6 +12,7 @@ class Board
   def initialize
     @board = Array.new(SIZE) { Array.new(SIZE) }
     populate
+    @captured_pieces = []
   end
 
   #just here so that we don't output @board in pry
@@ -45,9 +48,28 @@ class Board
   end
 
   def move(start, end_pos)
+    # There are three different modes for referencing cells.
+    # @board[y][x] for methods within Board EXCEPT:
+    # @board[x][y] for the render method.
+    # From outside Board, board[[x,y]] is the call.
+
+    x_start, y_start = clean_pos(start)
+    x_end, y_end = clean_pos(end_pos)
+
+    p x_start
+    p y_start
+    piece = @board[y_start][x_start]
+    p piece.class
+
+    raise "No piece at start location" if piece.nil?
+
+    raise unless piece.moves([x_start, y_start]).include?([x_end, y_end])
 
 
-    raise "No piece at location" unless
+    @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
+    @board[y_start][x_start] = nil
+    @board[y_end][x_end] = piece
+    piece.pos = [x_end, y_end]
   end
 
   # Output functions
@@ -103,9 +125,11 @@ class Board
   end
 
   def clean_pos(pos)
-    clean_pos = pos.take(2).downcase
-    x, y = ALGEBRAIC[pos[0].to_sym], pos[1].to_i
+    clean_pos = pos[0..1].downcase
+    x, y = ALGEBRAIC[pos[0].to_sym], (pos[1].to_i - 1)
+
     raise "Invalid input" unless x.between?(0, 7) || y.between?(0, 7)
+    [x, y]
   end
 
 end
