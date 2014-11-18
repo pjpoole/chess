@@ -5,8 +5,13 @@ class Piece
     @color = color
   end
 
-  def moves
+  def moves(pos)
     raise "Should never be here."
+
+  end
+
+  def empty?(pos)
+    @board[pos].nil?
   end
 
 end
@@ -16,7 +21,7 @@ class SlidingPiece < Piece
   def move_dirs
   end
 
-  def moves
+  def moves(pos)
   end
 end
 
@@ -24,7 +29,16 @@ class SteppingPiece < Piece
   def move_dirs
   end
 
-  def moves
+  def moves(pos)
+    moves = []
+    DELTAS.each do |dx, dy|
+      next unless (pos[0] + dx).between?(0, 7) && (pos[1] + dy).between?(0,7)
+      next unless empty?(pos)
+
+      moves << [pos[0] + dx, pos[1] + dy]
+    end
+
+    moves
   end
 end
 
@@ -33,7 +47,7 @@ class Queen < SlidingPiece
   def move_dirs
   end
 
-  def moves
+  def moves(pos)
   end
 end
 
@@ -41,7 +55,7 @@ class Bishop < SlidingPiece
   def move_dirs
   end
 
-  def moves
+  def moves(pos)
   end
 end
 
@@ -49,7 +63,7 @@ class Rook < SlidingPiece
   def move_dirs
   end
 
-  def moves
+  def moves(pos)
   end
 end
 
@@ -67,7 +81,8 @@ class King < SteppingPiece
   ]
 
 
-  def moves
+  def moves(pos)
+
   end
 end
 
@@ -83,7 +98,7 @@ class Knight < SteppingPiece
     [ 1,  2]
   ]
 
-  def moves
+  def moves(pos)
   end
 end
 
