@@ -3,6 +3,7 @@ class Piece
     @board = board
     @pos = pos
     @color = color
+    @print_char
   end
 
   def moves(pos)
