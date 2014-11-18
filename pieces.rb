@@ -43,9 +43,6 @@ class SlidingPiece < Piece
     @deltas = DELTAS
   end
 
-  def move_dirs
-  end
-
   def moves(pos)
     moves = []
     @deltas.each do |dx, dy|

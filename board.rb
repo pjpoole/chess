@@ -2,6 +2,7 @@ require "./pieces.rb"
 
 class Board
   SIZE = 8
+  ALGEBRAIC = { a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h:7 }
   COLORS = {w: "white", b: "black"}
 
   attr_reader :board
@@ -44,7 +45,9 @@ class Board
   end
 
   def move(start, end_pos)
-    raise "No piece at location" unless 
+
+
+    raise "No piece at location" unless
   end
 
   # Output functions
@@ -97,6 +100,12 @@ class Board
         @board[offset][index] = King.new(self, pos, color)
       end
     end
+  end
+
+  def clean_pos(pos)
+    clean_pos = pos.take(2).downcase
+    x, y = ALGEBRAIC[pos[0].to_sym], pos[1].to_i
+    raise "Invalid input" unless x.between?(0, 7) || y.between?(0, 7)
   end
 
 end
