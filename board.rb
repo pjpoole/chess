@@ -11,18 +11,46 @@ class Board
     populate
   end
 
+  #just here so that we don't output @board in pry
+  # def inspect
+  # end
+
   def [](pos)
     x, y = pos
-    @board[x][y]
+    @board[y][x]
   end
 
   def []=(pos, piece)
     x, y = pos
-    @board[x][y] = piece
+    @board[y][x] = piece
   end
 
+  def in_check?(color)
+
+  end
+
+  def move(start, end_pos)
+  end
+
+  # Output functions
+  def render
+    render =""
+    SIZE.downto(1) do |idx|
+      render << idx.to_s
+      x = idx - 1
+      SIZE.times do |y|
+        @board[x][y].nil? ? render << " " : render << @board[x][y].yield_char.concat(" ")
+      end
+      render << "\n"
+    end
+
+    render << " A B C D E F G H"
+  end
+
+  # Private functions below
+  private
   def populate
-    COLORS.each do |color|
+    COLORS.keys.each do |color|
       populate_pawns(color)
       populate_others(color)
     end
@@ -33,7 +61,7 @@ class Board
     #do pawns
     SIZE.times do |index|
       pos = [index, offset]
-      @board[pos] = Pawn.new(self, pos, color)
+      @board[offset][index] = Pawn.new(self, pos, color)
     end
   end
 
@@ -43,23 +71,17 @@ class Board
       pos = [index, offset]
       case index
       when 0, 7
-        @board[pos] = Rook.new(self, pos, color)
+        @board[offset][index] = Rook.new(self, pos, color)
       when 1, 6
-        @board[pos] = Knight.new(self, pos, color)
+        @board[offset][index] = Knight.new(self, pos, color)
       when 2, 5
-        @board[pos] = Bishop.new(self, pos, color)
+        @board[offset][index] = Bishop.new(self, pos, color)
       when 3
-        @board[pos] = Queen.new(self, pos, color)
+        @board[offset][index] = Queen.new(self, pos, color)
       when 4
-        @board[pos] = King.new(self, pos, color)
+        @board[offset][index] = King.new(self, pos, color)
       end
     end
   end
 
-  def in_check?(color)
-
-  end
-
-  def move(start, end_pos)
-  end
 end

@@ -1,8 +1,12 @@
 class Piece
+
   def initialize(board, pos, color)
     @board = board
     @pos = pos
     @color = color
+  end
+
+  def yield_char
     @print_char
   end
 
@@ -45,6 +49,11 @@ end
 
 
 class Queen < SlidingPiece
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "Q"
+  end
+
   def move_dirs
   end
 
@@ -53,6 +62,11 @@ class Queen < SlidingPiece
 end
 
 class Bishop < SlidingPiece
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "B"
+  end
+
   def move_dirs
   end
 
@@ -61,6 +75,11 @@ class Bishop < SlidingPiece
 end
 
 class Rook < SlidingPiece
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "R"
+  end
+
   def move_dirs
   end
 
@@ -81,6 +100,10 @@ class King < SteppingPiece
     [ 1,  1]
   ]
 
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "K"
+  end
 
   def moves(pos)
 
@@ -99,10 +122,20 @@ class Knight < SteppingPiece
     [ 1,  2]
   ]
 
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "N"
+  end
+
   def moves(pos)
   end
 end
 
 
 class Pawn < Piece
+  def initialize(board, pos, color)
+    super(board, pos, color)
+    @print_char = "P"
+  end
+
 end
