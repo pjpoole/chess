@@ -10,6 +10,8 @@ class Piece
   [ 1,  1]
 ]
 
+  attr_reader :color
+
   def initialize(board, pos, color)
     @board = board
     @pos = pos
@@ -26,6 +28,7 @@ class Piece
   end
 
   def empty?(pos)
+    p pos
     @board[pos].nil?
   end
 
@@ -33,6 +36,8 @@ end
 
 
 class SlidingPiece < Piece
+
+
   def initialize(board, pos, color)
     super(board, pos, color)
     @deltas = DELTAS
@@ -50,9 +55,15 @@ class SlidingPiece < Piece
         new_x += dx
         new_y += dy
         break unless (new_x).between?(0, 7) &&
-                     (new_y).between?(0, 7) &&
-                     empty?([new_x, new_y])
-        moves << [new_x, new_y]
+                     (new_y).between?(0, 7)
+        if !empty?([new_x, new_y])
+          moves << [new_x, new_y] if @board[[new_x, new_y]].color != color
+          break
+        elsif empty?([new_x, new_y])
+          moves << [new_x, new_y]
+        else
+          break
+        end
       end
     end
 

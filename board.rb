@@ -26,7 +26,7 @@ class Board
   end
 
   def in_check?(color)
-
+    @board
   end
 
   def move(start, end_pos)
