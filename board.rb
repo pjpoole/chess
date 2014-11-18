@@ -26,10 +26,25 @@ class Board
   end
 
   def in_check?(color)
-    @board
+    color == :w  ? (opp_color = :b) : (opp_color = :w)
+    enemy_pieces = []
+
+    @board.each do |row|
+      row.each do |cell|
+        enemy_pieces << cell if cell.color == opp_color
+        king_pos = cell.pos if cell.is_a?(King) && cell.color == color
+      end
+    end
+
+    enemy_pieces.each do |piece|
+      return true if piece.moves.include?(king_pos)
+    end
+
+    false
   end
 
   def move(start, end_pos)
+    raise "No piece at location" unless 
   end
 
   # Output functions
