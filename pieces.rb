@@ -17,13 +17,14 @@ class Piece
     @board = board
     @pos = pos
     @color = color
+    @board[pos] = self
   end
 
-  # def dup
-  #   self.class.new(@board, @pos, @color)
-  # end
+  def dup(board)
+    self.class.new(board, @pos.dup , @color)
+  end
 
-  def yield_char
+  def to_s
     @print_char
   end
 
@@ -46,7 +47,7 @@ class Piece
   end
 
   def move_into_check?(pos)
-    duped_board = @board.deep_dup
+    duped_board = @board.dup
 
     duped_board.coord_move!(@pos, pos)
     duped_board.in_check?(@color)
@@ -57,7 +58,7 @@ class Piece
   def color_check?(pos)
     x, y = pos[0], pos[1]
     if !empty?([x, y])
-      @board[[x, y]].color != color
+      @board[[x, y]].color != @color
     end
   end
 

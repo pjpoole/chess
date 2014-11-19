@@ -10,17 +10,19 @@ class Chess
     @board.populate
     @player1 = HumanPlayer.new("Peter")
     @player2 = HumanPlayer.new("Anthony")
-    @white_current_player = true
   end
 
   def play
+    white_current_player = true
+
     until game_over?
 
       puts @board.render
-      @white_current_player ? player = @player1 : player = @player2
+      player = white_current_player ? @player1 : @player2
+      color = white_current_player ? :w : :b
 
       begin
-        process_move(player.play_turn)
+        process_move(player.play_turn, color)
       rescue ChessError => e
         puts "Invalid move: #{e}"
         retry
@@ -29,7 +31,7 @@ class Chess
 
       system "clear"
 
-      @white_current_player = !@white_current_player
+      white_current_player = !white_current_player
     end
 
     puts "Game Over!"
@@ -39,15 +41,11 @@ class Chess
 
   private
 
-  def process_move(move)
-    @white_current_player ? (color = :w) : (color = :b)
-
+  def process_move(move, color)
     @board.move(move[0], move[1]) if color == @board.check_color(move[0])
   end
 
-  def game_over?
-    @white_current_player ? (color = :w) : (color = :b)
-
+  def game_over?(color)
     @board.checkmate?(color)
   end
 
