@@ -37,10 +37,13 @@ class Piece
   end
 
   def valid_moves?
+
   end
 
   def move_into_check?(pos)
+    duped_board = @board.deep_dup
 
+    duped_board.move(@pos, pos).in_check?(@color)
   end
 
 
