@@ -23,7 +23,7 @@ class Piece
     @print_char
   end
 
-  def moves(pos)
+  def moves
     raise "Should never be here."
 
   end
@@ -52,10 +52,10 @@ class SlidingPiece < Piece
     @deltas = DELTAS
   end
 
-  def moves(pos)
+  def moves
     moves = []
     @deltas.each do |dx, dy|
-      new_x, new_y = pos[0], pos[1]
+      new_x, new_y = @pos
 
       while true
         new_x += dx
@@ -76,12 +76,13 @@ class SteppingPiece < Piece
   def move_dirs
   end
 
-  def moves(pos)
+  def moves
     moves = []
+    x, y = @pos
     @deltas.each do |dx, dy|
-      next unless (pos[0] + dx).between?(0, 7) && (pos[1] + dy).between?(0,7)
+      next unless (x + dx).between?(0, 7) && (y + dy).between?(0,7)
 
-      moves << [pos[0] + dx, pos[1] + dy]
+      moves << [x + dx, y + dy]
     end
 
     moves.select { |move| color_check?(move) || empty?(move) }
@@ -99,9 +100,6 @@ class Queen < SlidingPiece
 
   def move_dirs
   end
-
-  def moves(pos)
-  end
 end
 
 class Bishop < SlidingPiece
@@ -114,9 +112,6 @@ class Bishop < SlidingPiece
 
   def move_dirs
   end
-
-  def moves(pos)
-  end
 end
 
 class Rook < SlidingPiece
@@ -128,9 +123,6 @@ class Rook < SlidingPiece
   end
 
   def move_dirs
-  end
-
-  def moves(pos)
   end
 end
 
@@ -170,9 +162,9 @@ class Pawn < Piece
     @print_char = "P"
   end
 
-  def moves(pos)
+  def moves
     moves = []
-    x, y = pos
+    x, y = @pos
 
     if color == :w
       if empty?([x, y + 1])

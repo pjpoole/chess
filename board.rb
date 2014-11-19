@@ -56,20 +56,18 @@ class Board
     x_start, y_start = clean_pos(start)
     x_end, y_end = clean_pos(end_pos)
 
-    p x_start
-    p y_start
     piece = @board[y_start][x_start]
-    p piece.class
 
     raise "No piece at start location" if piece.nil?
 
-    raise unless piece.moves([x_start, y_start]).include?([x_end, y_end])
+    raise unless piece.moves.include?([x_end, y_end])
 
 
     @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
     @board[y_start][x_start] = nil
     @board[y_end][x_end] = piece
     piece.pos = [x_end, y_end]
+    puts render
   end
 
   # Output functions
