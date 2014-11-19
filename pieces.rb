@@ -29,7 +29,6 @@ class Piece
 
   def moves
     raise "Should never be here."
-
   end
 
   def empty?(pos)
@@ -42,13 +41,14 @@ class Piece
       valid_moves << move unless move_into_check?(move)
     end
 
-    valid_moves 
+    valid_moves
   end
 
   def move_into_check?(pos)
     duped_board = @board.deep_dup
 
-    duped_board.move(@pos, pos).in_check?(@color)
+    duped_board.coord_move(@pos, pos)
+    duped_board.in_check?(@color)
   end
 
 
