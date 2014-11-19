@@ -21,7 +21,7 @@ class Board
     @board.each_with_index do |row, x|
       row.each_with_index do |el, y|
         next if el.nil?
-        el.dup(self)
+        el.dup(dupe)
       end
     end
 
@@ -41,7 +41,7 @@ class Board
   def checkmate?(color)
     return false unless in_check?(color)
 
-    @board.each do |row|
+    @board.each do |row| # TODO?
       row.each do |cell|
         next if cell.nil?
         if cell.color == color
@@ -65,9 +65,6 @@ class Board
     false
   end
 
-
-
-
   def move(start, end_pos)
     # Accepts inputs of the form "a1"
 
@@ -85,48 +82,31 @@ class Board
   def check_color(pos)
     x, y = clean_pos(pos)
 
-    color = @board[y][x].color
-    raise "No piece there!" if color.nil?
-    color
+    raise ChessError.new('No piece there!') if @board[y][x].nil?
+
+    @board[y][x].color
   end
 
   def coord_move(start, end_pos)
     # Accepts inputs of the form [x, y]
     piece = @board[start[1]][start[0]]
 
-    raise "No piece at start location" if piece.nil?
-    raise "Move would put player in check" unless piece.valid_moves.include?([end_pos[0], end_pos[1]])
+    raise ChessError.new('No piece at start location') if piece.nil?
+    raise ChessError.new('Move would put player in check') if
+          piece.move_into_check?(end_pos)
+    raise ChessError.new('Invalid destination') unless
+          piece.valid_moves.include?([end_pos[0], end_pos[1]])
 
     update_pos(start, end_pos)
   end
 
   def coord_move!(start, end_pos)
     piece = @board[start[1]][start[0]]
-
     raise if piece.nil? # should never happen
-    raise "Invalid destination" unless piece.moves.include?([end_pos[0], end_pos[1]])
+    raise ChessError.new('Invalid destination') unless
+          piece.moves.include?([end_pos[0], end_pos[1]])
 
     update_pos(start, end_pos)
-  end
-
-  private
-  def update_pos(start, end_pos)
-    x_start, y_start = start
-    x_end, y_end = end_pos
-
-    @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
-    
-    @board[y_start][x_start], @board[y_end][x_end] = nil, @board[y_start][x_start]
-    @board[y_end][x_end].pos = [x_end, y_end]
-  end
-
-  def populate
-    COLORS.keys.each do |color|
-      populate_pawns(color)
-      populate_others(color)
-    end
-
-    self
   end
 
   # Output functions
@@ -143,6 +123,28 @@ class Board
     end
 
     render << " A B C D E F G H"
+  end
+
+  private
+  def update_pos(start, end_pos)
+    x_start, y_start = start
+    x_end, y_end = end_pos
+
+    @captured_pieces << @board[y_end][x_end] unless
+          @board[y_end][x_end].nil?
+
+    @board[y_start][x_start], @board[y_end][x_end] =
+          nil, @board[y_start][x_start]
+    @board[y_end][x_end].pos = [x_end, y_end]
+  end
+
+  def populate
+    COLORS.keys.each do |color|
+      populate_pawns(color)
+      populate_others(color)
+    end
+
+    self
   end
 
   def place(piece_symbol, pos, color)
@@ -199,18 +201,19 @@ class Board
     clean_pos = pos[0..1].downcase
     x, y = ALGEBRAIC[pos[0].to_sym], (pos[1].to_i - 1)
 
-    raise "Input out of bounds" unless x.between?(0, 7) || y.between?(0, 7)
+    raise ChessError.new('Input out of bounds') unless
+          x.between?(0, 7) && y.between?(0, 7)
     [x, y]
   end
 
   def find_king(color)
-    @board.flatten.compress.find do |piece|
+    @board.flatten.compact.find do |piece|
       piece.is_a?(King) && piece.color == color
     end
   end
 
   def find_pieces(color)
-    @board.flatten.compress.select do |piece|
+    @board.flatten.compact.select do |piece|
       piece.color == color
     end
   end

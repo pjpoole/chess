@@ -65,7 +65,7 @@ class String
     begin
       require 'Win32/Console/ANSI' if RUBY_PLATFORM =~ /win32/
     rescue LoadError
-      raise 'You must gem install win32console to use colorize on Windows'
+      raise ChessError.new 'You must gem install win32console to use colorize on Windows'
     end
 
     self.scan(REGEXP_PATTERN).inject("") do |str, match|

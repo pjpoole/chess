@@ -1,3 +1,5 @@
+require './chess_errors.rb'
+
 class Piece
   DELTAS = [
     [ 0, -1],
@@ -10,8 +12,7 @@ class Piece
     [ 1,  1]
   ]
 
-  attr_accessor :pos
-  attr_reader :color
+  attr_accessor :pos, :color
 
   def initialize(board, pos, color)
     @board = board
@@ -21,7 +22,7 @@ class Piece
   end
 
   def dup(board)
-    self.class.new(board, @pos.dup , @color)
+    self.class.new(board, @pos.dup, @color)
   end
 
   def to_s
@@ -29,7 +30,7 @@ class Piece
   end
 
   def moves
-    raise "Should never be here."
+    raise ChessError.new('Should never be here.')
   end
 
   def empty?(pos)
