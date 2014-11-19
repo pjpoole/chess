@@ -31,6 +31,15 @@ class Piece
     @board[pos].nil?
   end
 
+
+  #return a boolean for whether the end move lands on a piece of opposite color
+  def color_check?(pos)
+    x, y = pos[0], pos[1]
+    if !empty?([x, y])
+      @board[[x, y]].color != color
+    end
+  end
+
 end
 
 
@@ -52,18 +61,13 @@ class SlidingPiece < Piece
         new_y += dy
         break unless (new_x).between?(0, 7) &&
                      (new_y).between?(0, 7)
-        if !empty?([new_x, new_y])
-          moves << [new_x, new_y] if @board[[new_x, new_y]].color != color
-          break
-        elsif empty?([new_x, new_y])
-          moves << [new_x, new_y]
-        else
-          break
-        end
+
+        moves << [new_x, new_y]
+        break if !empty?(move)
       end
     end
 
-    moves
+    moves.select { |move| color_check?(move) || empty?(move) }
   end
 end
 
@@ -75,12 +79,11 @@ class SteppingPiece < Piece
     moves = []
     @deltas.each do |dx, dy|
       next unless (pos[0] + dx).between?(0, 7) && (pos[1] + dy).between?(0,7)
-      next unless empty?(pos)
 
       moves << [pos[0] + dx, pos[1] + dy]
     end
 
-    moves
+    moves.select { |move| move.}
   end
 end
 
