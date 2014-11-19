@@ -10,7 +10,7 @@ class Piece
   [ 1,  1]
 ]
 
-  attr_writer :pos
+  attr_accessor :pos
   attr_reader :color
 
   def initialize(board, pos, color)
@@ -64,7 +64,7 @@ class SlidingPiece < Piece
                      (new_y).between?(0, 7)
 
         moves << [new_x, new_y]
-        break if !empty?(move)
+        break if !empty?([new_x, new_y])
       end
     end
 

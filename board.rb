@@ -32,9 +32,11 @@ class Board
   def in_check?(color)
     color == :w  ? (opp_color = :b) : (opp_color = :w)
     enemy_pieces = []
+    king_pos = nil
 
     @board.each do |row|
       row.each do |cell|
+        next if cell.nil?
         enemy_pieces << cell if cell.color == opp_color
         king_pos = cell.pos if cell.is_a?(King) && cell.color == color
       end
