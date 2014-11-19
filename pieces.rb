@@ -36,8 +36,13 @@ class Piece
     @board[pos].nil?
   end
 
-  def valid_moves?
+  def valid_moves
+    valid_moves = []
+    self.moves.each do |move|
+      valid_moves << move unless move_into_check?(move)
+    end
 
+    valid_moves 
   end
 
   def move_into_check?(pos)

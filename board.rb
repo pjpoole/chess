@@ -71,13 +71,24 @@ class Board
   end
 
   def move(start, end_pos)
+    # Accepts inputs of the form "a1"
+    
     # There are three different modes for referencing cells.
     # @board[y][x] for methods within Board EXCEPT:
     # @board[x][y] for the render method.
     # From outside Board, board[[x,y]] is the call.
 
-    x_start, y_start = clean_pos(start)
-    x_end, y_end = clean_pos(end_pos)
+    start_array = clean_pos(start)
+    end_array = clean_pos(end_pos)
+
+    coord_move(start_array, end_array)
+    puts render
+  end
+
+  def coord_move(start, end_pos)
+    # Accepts inputs of the form [x, y]
+    x_start, y_start = start
+    x_end, y_end = end_pos
 
     piece = @board[y_start][x_start]
 
@@ -85,12 +96,10 @@ class Board
 
     raise unless piece.moves.include?([x_end, y_end])
 
-
     @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
     @board[y_start][x_start] = nil
     @board[y_end][x_end] = piece
     piece.pos = [x_end, y_end]
-    puts render
   end
 
   def populate
@@ -118,21 +127,22 @@ class Board
 
   def place(piece_symbol, pos, color)
     x, y = clean_pos(pos)
+    new_pos = [x, y]
 
     # TODO: can you do @board[y][x] = case when   ??
     case piece_symbol
     when :P
-      @board[y][x] = Pawn.new(self, pos, color)
+      @board[y][x] = Pawn.new(self, new_pos, color)
     when :Q
-      @board[y][x] = Queen.new(self, pos, color)
+      @board[y][x] = Queen.new(self, new_pos, color)
     when :K
-      @board[y][x] = King.new(self, pos, color)
+      @board[y][x] = King.new(self, new_pos, color)
     when :B
-      @board[y][x] = Bishop.new(self, pos, color)
+      @board[y][x] = Bishop.new(self, new_pos, color)
     when :R
-      @board[y][x] = Rook.new(self, pos, color)
+      @board[y][x] = Rook.new(self, new_pos, color)
     when :N
-      @board[y][x] = Knight.new(self, pos, color)
+      @board[y][x] = Knight.new(self, new_pos, color)
     end
   end
 
