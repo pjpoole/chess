@@ -57,7 +57,7 @@ class Board
       row.each do |cell|
         next if cell.nil?
         if cell.color == color
-          return false unless cell.valid_moves.nil?
+          return false unless cell.valid_moves.empty?
         end
       end
     end
@@ -105,8 +105,7 @@ class Board
     piece = @board[start[1]][start[0]]
 
     raise "No piece at start location" if piece.nil?
-    raise "Move would put player in check" unless
-          piece.valid_moves.include?([end_pos[0], end_pos[1]])
+    raise "Move would put player in check" unless piece.valid_moves.include?([end_pos[0], end_pos[1]])
 
     update_pos(start, end_pos)
   end
@@ -115,8 +114,7 @@ class Board
     piece = @board[start[1]][start[0]]
 
     raise if piece.nil? # should never happen
-    raise "Invalid destination" unless
-          piece.moves.include?([end_pos[0], end_pos[1]])
+    raise "Invalid destination" unless piece.moves.include?([end_pos[0], end_pos[1]])
 
     update_pos(start, end_pos)
   end
@@ -124,11 +122,12 @@ class Board
   def update_pos(start, end_pos)
     x_start, y_start = start
     x_end, y_end = end_pos
+    piece = @board[y_start][x_start]
 
     @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
-    @board[y_start][x_start] = nil
     @board[y_end][x_end] = piece
     piece.pos = [x_end, y_end]
+    @board[y_start][x_start] = nil
   end
 
   def populate
