@@ -97,7 +97,6 @@ class Board
     end_array = clean_pos(end_pos)
 
     coord_move(start_array, end_array)
-    puts render
   end
 
   def check_color(pos)
@@ -141,6 +140,8 @@ class Board
       populate_pawns(color)
       populate_others(color)
     end
+
+    self
   end
 
   # Output functions

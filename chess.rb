@@ -1,49 +1,54 @@
 require './board.rb'
-require "./chess_errors.rb"
+require './players.rb'
+require './chess_errors.rb'
 
 
 class Chess
 
-def play
-
   def initialize
-    @board = Board.new.populate
-    @player1 = get_player
-    @player2 = get_player
+    @board = Board.new
+    @board.populate
+    @player1 = HumanPlayer.new("Peter")
+    @player2 = HumanPlayer.new("Anthony")
     @white_current_player = true
   end
 
   def play
     until game_over?
+
       puts @board.render
-      
+      @white_current_player ? player = @player1 : player = @player2
+
       begin
-        move = play_turn
-        process_move(move)
+        process_move(player.play_turn)
       rescue ChessError => e
         puts "Invalid move: #{e}"
         retry
       end
+      sleep(1)
+
+      system "clear"
 
       @white_current_player = !@white_current_player
     end
+
+    puts "Game Over!"
+    puts "Congrats #{ @white_current_player ? @player2.name : @player1.name }!"
   end
 
 
   private
 
   def process_move(move)
-    @white_current_player ? color = :w : color = :b
+    @white_current_player ? (color = :w) : (color = :b)
 
     @board.move(move[0], move[1]) if color == @board.check_color(move[0])
   end
 
-  def win?(player)
-    @board.checkmate?(player.color)
-  end
-
   def game_over?
-    win?(@player1) || win?(@player2)
+    @white_current_player ? (color = :w) : (color = :b)
+
+    @board.checkmate?(color)
   end
 
   def get_player
@@ -53,10 +58,8 @@ def play
   end
 end
 
-end
-
 
 if $PROGRAM_NAME == __FILE__
-  chess = Board.new
-  puts chess.render
+  chess = Chess.new
+  chess.play
 end

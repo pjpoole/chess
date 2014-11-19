@@ -1,5 +1,7 @@
 class Player
 
+  attr_reader :name
+
   def play_turn
   end
 end
@@ -10,7 +12,7 @@ class HumanPlayer < Player
   end
 
   def play_turn
-    puts "Player #{name}, input your move in algebraic notation (e.g. a2, a4):"
+    puts "Player #{@name}, input your move in algebraic notation (e.g. a2, a4):"
     print "> "
     gets.split(",").map { |el| el.strip }
   end
