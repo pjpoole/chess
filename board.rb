@@ -100,6 +100,12 @@ class Board
     puts render
   end
 
+  def check_color(pos)
+    x, y = clean_pos(pos)
+
+    @board[y][x].color
+  end
+
   def coord_move(start, end_pos)
     # Accepts inputs of the form [x, y]
     piece = @board[start[1]][start[0]]

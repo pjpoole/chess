@@ -1,2 +1,2 @@
-class ChessMoveError < StandardError
+class ChessError < StandardError
 end
