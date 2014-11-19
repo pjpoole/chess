@@ -36,6 +36,7 @@ class Piece
   end
 
   def valid_moves
+
     valid_moves = []
     self.moves.each do |move|
       valid_moves << move unless move_into_check?(move)
@@ -47,7 +48,7 @@ class Piece
   def move_into_check?(pos)
     duped_board = @board.deep_dup
 
-    duped_board.coord_move(@pos, pos)
+    duped_board.coord_move!(@pos, pos)
     duped_board.in_check?(@color)
   end
 
@@ -72,6 +73,7 @@ class SlidingPiece < Piece
   end
 
   def moves
+    # Returns all moves regardless of whether it puts the board in check
     moves = []
     @deltas.each do |dx, dy|
       new_x, new_y = @pos

@@ -50,6 +50,21 @@ class Board
     @board[y][x] = piece
   end
 
+  def checkmate?(color)
+    return false unless in_check?(color)
+
+    @board.each do |row|
+      row.each do |cell|
+        next if cell.nil?
+        if cell.color == color
+          return false unless cell.valid_moves.nil?
+        end
+      end
+    end
+
+    true
+  end
+
   def in_check?(color)
     color == :w  ? (opp_color = :b) : (opp_color = :w)
     enemy_pieces = []
@@ -72,7 +87,7 @@ class Board
 
   def move(start, end_pos)
     # Accepts inputs of the form "a1"
-    
+
     # There are three different modes for referencing cells.
     # @board[y][x] for methods within Board EXCEPT:
     # @board[x][y] for the render method.
@@ -87,14 +102,28 @@ class Board
 
   def coord_move(start, end_pos)
     # Accepts inputs of the form [x, y]
-    x_start, y_start = start
-    x_end, y_end = end_pos
-
-    piece = @board[y_start][x_start]
+    piece = @board[start[1]][start[0]]
 
     raise "No piece at start location" if piece.nil?
+    raise "Move would put player in check" unless
+          piece.valid_moves.include?([end_pos[0], end_pos[1]])
 
-    raise unless piece.moves.include?([x_end, y_end])
+    update_pos(start, end_pos)
+  end
+
+  def coord_move!(start, end_pos)
+    piece = @board[start[1]][start[0]]
+
+    raise if piece.nil? # should never happen
+    raise "Invalid destination" unless
+          piece.moves.include?([end_pos[0], end_pos[1]])
+
+    update_pos(start, end_pos)
+  end
+
+  def update_pos(start, end_pos)
+    x_start, y_start = start
+    x_end, y_end = end_pos
 
     @captured_pieces << @board[y_end][x_end] unless @board[y_end][x_end].nil?
     @board[y_start][x_start] = nil
@@ -181,7 +210,7 @@ class Board
     clean_pos = pos[0..1].downcase
     x, y = ALGEBRAIC[pos[0].to_sym], (pos[1].to_i - 1)
 
-    raise "Invalid input" unless x.between?(0, 7) || y.between?(0, 7)
+    raise "Input out of bounds" unless x.between?(0, 7) || y.between?(0, 7)
     [x, y]
   end
 
