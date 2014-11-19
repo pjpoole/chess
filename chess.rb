@@ -5,7 +5,9 @@ require "./chess_errors.rb"
 class Chess
 
 def play
-
+  #need to create new board
+  #need to populate
+  
   begin
     # move
   rescue

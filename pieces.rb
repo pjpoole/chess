@@ -1,14 +1,14 @@
 class Piece
   DELTAS = [
-  [ 0, -1],
-  [-1,  0],
-  [ 0,  1],
-  [ 1,  0],
-  [-1, -1],
-  [-1,  1],
-  [ 1, -1],
-  [ 1,  1]
-]
+    [ 0, -1],
+    [-1,  0],
+    [ 0,  1],
+    [ 1,  0],
+    [-1, -1],
+    [-1,  1],
+    [ 1, -1],
+    [ 1,  1]
+  ]
 
   attr_accessor :pos
   attr_reader :color
@@ -18,6 +18,10 @@ class Piece
     @pos = pos
     @color = color
   end
+
+  # def dup
+  #   self.class.new(@board, @pos, @color)
+  # end
 
   def yield_char
     @print_char
@@ -30,6 +34,13 @@ class Piece
 
   def empty?(pos)
     @board[pos].nil?
+  end
+
+  def valid_moves?
+  end
+
+  def move_into_check?(pos)
+
   end
 
 

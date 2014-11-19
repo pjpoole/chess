@@ -11,9 +11,30 @@ class Board
 
   def initialize
     @board = Array.new(SIZE) { Array.new(SIZE) }
-    populate
     @captured_pieces = []
   end
+
+  def deep_dup
+    dupe = Board.new
+
+    @board.each_with_index do |row, x|
+      row.each_with_index do |el, y|
+        next if el.nil?
+        dupe.board[x][y] = dup_piece(dupe, el)
+      end
+    end
+
+    dupe
+  end
+
+  def dup_piece(board, element)
+    dup_pos = element.pos
+    dup_color = element.color
+
+    element.class.new(board, dup_pos, dup_color)
+  end
+
+
 
   #just here so that we don't output @board in pry
   # def inspect
@@ -72,6 +93,13 @@ class Board
     puts render
   end
 
+  def populate
+    COLORS.keys.each do |color|
+      populate_pawns(color)
+      populate_others(color)
+    end
+  end
+
   # Output functions
   def render
     render =""
@@ -88,14 +116,28 @@ class Board
     render << " A B C D E F G H"
   end
 
-  # Private functions below
-  private
-  def populate
-    COLORS.keys.each do |color|
-      populate_pawns(color)
-      populate_others(color)
+  def place(piece_symbol, pos, color)
+    x, y = clean_pos(pos)
+
+    # TODO: can you do @board[y][x] = case when   ??
+    case piece_symbol
+    when :P
+      @board[y][x] = Pawn.new(self, pos, color)
+    when :Q
+      @board[y][x] = Queen.new(self, pos, color)
+    when :K
+      @board[y][x] = King.new(self, pos, color)
+    when :B
+      @board[y][x] = Bishop.new(self, pos, color)
+    when :R
+      @board[y][x] = Rook.new(self, pos, color)
+    when :N
+      @board[y][x] = Knight.new(self, pos, color)
     end
   end
+
+  # Private functions below
+  private
 
   def populate_pawns(color)
     color == :w ? offset = 1 : offset = 6
