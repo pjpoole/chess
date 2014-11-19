@@ -79,7 +79,8 @@ class Board
       render << idx.to_s
       x = idx - 1
       SIZE.times do |y|
-        @board[x][y].nil? ? render << " " : render << @board[x][y].yield_char.concat(" ")
+        @board[x][y].nil? ? (render << " ") : (render << @board[x][y].yield_char)
+        render << " "
       end
       render << "\n"
     end

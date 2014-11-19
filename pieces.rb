@@ -10,6 +10,7 @@ class Piece
   [ 1,  1]
 ]
 
+  attr_writer :pos
   attr_reader :color
 
   def initialize(board, pos, color)
@@ -83,7 +84,7 @@ class SteppingPiece < Piece
       moves << [pos[0] + dx, pos[1] + dy]
     end
 
-    moves.select { |move| move.}
+    moves.select { |move| color_check?(move) || empty?(move) }
   end
 end
 
@@ -169,4 +170,26 @@ class Pawn < Piece
     @print_char = "P"
   end
 
+  def moves(pos)
+    moves = []
+    x, y = pos
+
+    if color == :w
+      if empty?([x, y + 1])
+        moves << [x, y + 1]
+        moves << [x, y + 2] if y == 1 && empty?([x, y + 2])
+      end
+      moves << [x + 1, y + 1] if color_check?([x + 1, y + 1])
+      moves << [x - 1, y + 1] if color_check?([x - 1, y + 1])
+    else
+      if empty?([x, y - 1])
+        moves << [x, y - 1]
+        moves << [x, y - 2] if y == 6 && empty?([x, y - 2])
+      end
+      moves << [x - 1, y - 1] if color_check?([x - 1, y - 1])
+      moves << [x + 1, y - 1] if color_check?([x + 1, y - 1])
+    end
+
+    moves
+  end
 end
